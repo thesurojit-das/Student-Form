@@ -48,4 +48,7 @@ app.get("/welcome", function (req, res) {
 
 
 // set app port 
-app.listen(3000);
+const port =process.env.PORT||7000;
+app.listen(port,()=>{
+    console.log(`Form app listening on port ${port}`)
+});
