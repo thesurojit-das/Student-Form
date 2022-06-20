@@ -30,9 +30,7 @@ app.post('/', function (req, res) {
                 // throw error;
                 res.sendFile(__dirname + "/public/NotSuccess.html")
             }
-            else{
             res.sendFile(__dirname + "/public/success.html")
-            }
         })
     })
 })
