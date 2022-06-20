@@ -47,12 +47,5 @@ app.get("/welcome", function (req, res) {
 })
 
 
-// set app port 
-// app.listen(3000,function(){
-//     console.log("let's go");
-// });
 
-const port =process.env.PORT||7000;
-app.listen(port,()=>{
-    console.log(`Example app listening on port ${port}`)
-});
+app.listen(3000)
