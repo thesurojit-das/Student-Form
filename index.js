@@ -1,6 +1,4 @@
-
-
-var con = require("./public/connection")
+var connection = require("./public/connection")
 const express = require("express");
 const bodyParser = require("body-parser");
 const encoder = bodyParser.urlencoded();
@@ -11,7 +9,7 @@ app.use(express.static(path.join(__dirname, 'public'))); //to get css file
 
 
 // connect to the database
-con.connect(function (error) {
+connection.connect(function (error) {
     if (error) throw error
     else console.log("connected to the database successfully!")
 });
@@ -32,7 +30,7 @@ app.post("/", encoder, function (req, res) {
     var DEGREE = req.body.DEGREE;
 
 
-    con.query("INSERT INTO student (FIRST,LAST,REGISTRATION,DOJ,EMAIL,PHONE,GENDER,DEGREE) VALUES (?,?,?,?,?,?,?,?)",[FIRST,LAST,REGISTRATION,DOJ,EMAIL,PHONE,GENDER,DEGREE], function (error, results, fields) {
+    connection.query("INSERT INTO student (FIRST,LAST,REGISTRATION,DOJ,EMAIL,PHONE,GENDER,DEGREE) VALUES (?,?,?,?,?,?,?,?)",[FIRST,LAST,REGISTRATION,DOJ,EMAIL,PHONE,GENDER,DEGREE], function (error, results, fields) {
         if (PHONE.length > 0) {
             res.redirect("/welcome");
         } else {
@@ -50,7 +48,4 @@ app.get("/welcome", function (req, res) {
 
 
 // set app port 
-const port =process.env.PORT||3000;
-app.listen(port,()=>{
-    console.log(`listening  ${port}`);
-});
+app.listen(3000);
