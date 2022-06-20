@@ -1,16 +1,27 @@
+
+
 var con = require("./public/connection")
-var express = require("express");
+const express = require("express");
+const bodyParser = require("body-parser");
+const encoder = bodyParser.urlencoded();
+
 var app = express();
 var path = require('path') //to get css file
 app.use(express.static(path.join(__dirname, 'public'))); //to get css file
-var bodyParser = require("body-parser");
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
-app.get('/', function (req, res) {
-    res.sendFile(__dirname + '/public/index.html');
+
+
+// connect to the database
+con.connect(function (error) {
+    if (error) throw error
+    else console.log("connected to the database successfully!")
 });
 
-app.post('/', function (req, res) {
+
+app.get("/", function (req, res) {
+    res.sendFile(__dirname + "/public/index.html");
+})
+
+app.post("/", encoder, function (req, res) {
     var FIRST = req.body.FIRST;
     var LAST = req.body.LAST;
     var REGISTRATION = req.body.REGISTRATION;
@@ -21,19 +32,24 @@ app.post('/', function (req, res) {
     var DEGREE = req.body.DEGREE;
 
 
-    con.connect(function () {
-        // if (error)  throw error;
-        
-        var sql = "INSERT INTO student (FIRST,LAST,REGISTRATION,DOJ,EMAIL,PHONE,GENDER,DEGREE) VALUES ('" + FIRST + "','" + LAST + "','" + REGISTRATION + "','" + DOJ + "','" + EMAIL + "','" + PHONE + "','" + GENDER + "','" + DEGREE + "')";
-        con.query(sql, function (error, result) {
-            if (error) {
-                // throw error;
-                res.sendFile(__dirname + "/public/NotSuccess.html")
-            }
-            res.sendFile(__dirname + "/public/success.html")
-        })
-    })
+    con.query("INSERT INTO student (FIRST,LAST,REGISTRATION,DOJ,EMAIL,PHONE,GENDER,DEGREE) VALUES (?,?,?,?,?,?,?,?)",[FIRST,LAST,REGISTRATION,DOJ,EMAIL,PHONE,GENDER,DEGREE], function (error, results, fields) {
+        if (PHONE.length > 0) {
+            res.redirect("/welcome");
+        } else {
+            res.redirect("/");
+        }
+        res.end();
+    });
+
 })
+
+// when login is success
+app.get("/welcome", function (req, res) {
+    res.sendFile(__dirname + "/public/success.html")
+})
+
+
+// set app port 
 const port =process.env.PORT||3000;
 app.listen(port,()=>{
     console.log(`listening  ${port}`);
